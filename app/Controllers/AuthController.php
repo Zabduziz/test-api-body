@@ -13,14 +13,14 @@ class AuthController extends BaseController
         $userModel = new UserModel();
         $json = $this->request->getJSON();
 
-        if (!$json || !isset($json->username) || !isset($json->password)) {
+        if (!$json || !isset($json->email) || !isset($json->password)) {
             return $this->response->setStatusCode(400)->setJSON([
                 'status' => false,
-                'message' => 'Username dan password wajib diisi.'
+                'message' => 'Email dan Password wajib diisi.'
             ]);
         }
 
-        $user = $userModel->where('username', $json->username)->first();
+        $user = $userModel->where('email', $json->email)->first();
 
         if (!$user || !password_verify($json->password, $user['password'])) {
             return $this->response->setStatusCode(401)->setJSON([
@@ -33,7 +33,7 @@ class AuthController extends BaseController
             'status' => true,
             'message' => 'Login berhasil.',
             'data' => [
-                'username' => $user['username']
+                'email' => $user['email']
             ]
         ]);
     }
@@ -43,23 +43,23 @@ class AuthController extends BaseController
         $userModel = new UserModel();
         $json = $this->request->getJSON();
 
-        if (!$json || !isset($json->username) || !isset($json->password)) {
+        if (!$json || !isset($json->email) || !isset($json->password)) {
             return $this->response->setStatusCode(400)->setJSON([
                 'status' => false,
-                'message' => 'Username dan password wajib diisi.'
+                'message' => 'Email dan Password wajib diisi.'
             ]);
         }
 
         // Cek username sudah dipakai belum
-        if ($userModel->where('username', $json->username)->first()) {
+        if ($userModel->where('email', $json->email)->first()) {
             return $this->response->setStatusCode(409)->setJSON([
                 'status' => false,
-                'message' => 'Username sudah digunakan.'
+                'message' => 'Email sudah digunakan.'
             ]);
         }
 
         $userModel->insert([
-            'username' => $json->username,
+            'email' => $json->email,
             'password' => password_hash($json->password, PASSWORD_DEFAULT),
         ]);
 
@@ -76,11 +76,12 @@ class AuthController extends BaseController
 
         if ($record)
         {
-            $userModel->delete($id);
             return $this->response->setStatusCode(200)->setJSON([
                 'status' => true,
-                'message' => 'Data berhasil dihapus'
+                'message' => 'Data berhasil dihapus',
+                'record' => $record
             ]);
+            $userModel->delete($id);
         } else
         {
             return $this->response->setStatusCode(404)->setJSON([
