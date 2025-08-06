@@ -34,7 +34,7 @@ class Cors extends BaseConfig
          *   - ['http://localhost:8080']
          *   - ['https://www.example.com']
          */
-        'allowedOrigins' => [],
+        'allowedOrigins' => ['*'],
 
         /**
          * Origin regex patterns for the `Access-Control-Allow-Origin` header.
@@ -68,7 +68,15 @@ class Cors extends BaseConfig
          *
          * @see https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Allow-Headers
          */
-        'allowedHeaders' => [],
+        'allowedHeaders' => [
+            'X-API-KEY',
+            'Origin',
+            'X-Requested-With',
+            'Content-Type',
+            'Accept',
+            'Access-Control-Request-Method',
+            'Authorization'
+        ],
 
         /**
          * Set headers to expose.
@@ -93,7 +101,7 @@ class Cors extends BaseConfig
          *
          * @see https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Allow-Methods
          */
-        'allowedMethods' => [],
+        'allowedMethods' => ['GET', 'POST', 'OPTIONS', 'PUT', 'DELETE'],
 
         /**
          * Set how many seconds the results of a preflight request can be cached.
